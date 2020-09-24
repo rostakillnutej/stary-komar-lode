@@ -1,5 +1,9 @@
 from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit
+import logging
+
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.config['SECRET_KEY'] = 'tajny kodes na šifry tady'
@@ -38,3 +42,4 @@ def on_change(data):
 
 if __name__ == '__main__':
     socketio.run(app)
+    app.run(host= '0.0.0.0')
