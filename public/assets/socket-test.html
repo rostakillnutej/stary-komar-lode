@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>Lodě Socekt.IO test</title>
 
-    <script src="/socket.io.js"></script>
+    <script src="./assets/socket.io.js"></script>
+    <script src="./assets/fingerprint2.js"></script>
 
     <style>
       h1 {
@@ -69,10 +70,41 @@
       color = getColors()
       let col = document.querySelector('#col');
       col.style.backgroundColor = color;
+
+
 /* *************** */
 
       /* založení socketu */
-      function init(){
+      async function init(){
+
+/*
+        function getUniqueId() {
+          return new Promise(resolve => {
+            setTimeout(function () {
+                Fingerprint2.get(keys => {
+                  resolve(keys);
+                })
+            }, 500)
+          });
+        }
+*/
+
+        function getUniqueId() {
+          return new Promise(resolve => {
+            Fingerprint2.get(function (components) {
+              var values = components.map(function (component) { return component.value })
+              var murmur = Fingerprint2.x64hash128(values.join(''), 31)
+              resolve(murmur)
+            })
+          });
+        }
+
+
+
+
+        const lol = await getUniqueId();
+        console.log(lol);
+
         socket = io.connect('http://' + document.domain + ':' + location.port);
 
         socket.on('connect', function(res) {
@@ -85,7 +117,11 @@
           ping.setEnd();
           console.log('Čas odevzy serveru: ' + ping.getRes() + 'ms')
         });
+
       }
+
+
+
 
       /* Vygenerování náhodné barvy */
       function getColors(){

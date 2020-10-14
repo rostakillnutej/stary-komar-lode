@@ -1,0 +1,28 @@
+:root {
+  --red: #AB2C4B;
+  --gray: #252525;
+  --grayPrimary: #3D3D3D;
+  --graySecondary: #585858;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--grayPrimary);
+}
+
+.l-header {
+  margin: 15px auto 0 auto;
+  max-width: 400px;
+  text-align: center;
+  padding: 10px 0 10px 0;
+  background-color: var(--gray);
+  border-left: solid 5px var(--red);
+  border-right: solid 5px var(--red);
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+}
+
+h1 {
+  //Nejde nic
+}

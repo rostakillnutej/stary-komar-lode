@@ -1,6 +1,9 @@
 from flask import Flask, request, send_from_directory
 from flask_socketio import SocketIO, emit
-import logging
+import logging,sys
+
+sys.path.append('./controllers')
+import lobby
 
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
@@ -9,9 +12,13 @@ app = Flask(__name__, static_url_path='', static_folder='public')
 app.config['SECRET_KEY'] = 'tajny kodes na šifry tady'
 socketio = SocketIO(app)
 
-@app.route('/')
-def hello_world():
-    return app.send_static_file('r_index.html')
+@app.route('/', methods=['GET'])
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/lobby/new', methods=['POST'])
+def createLobby():
+    return lobby.create(request)
 
 '''
 @socketio.on('my event', namespace='/test')
@@ -29,8 +36,8 @@ def test_connect():
 @socketio.on('disconnect', namespace='/test')
 def test_disconnect():
     print('Client disconnected')
-'''
 
+###################################
 
 @socketio.on('change')
 def on_change(data):
@@ -38,7 +45,7 @@ def on_change(data):
     print(data);
     print('-------------');
     emit('change_response', data, broadcast=True)
-
+'''
 
 if __name__ == '__main__':
     socketio.run(app)
