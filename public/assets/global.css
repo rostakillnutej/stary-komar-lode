@@ -23,6 +23,43 @@ body {
   color: white;
 }
 
-h1 {
-  //Nejde nic
+.l-list {
+  max-width: 600px;
+  width: 60%;
+  min-width: 300px;
+  height: 100%;
+  margin: 0 auto;
+  //background-color: green;
+  background-color: var(--gray);
+}
+
+.l-list>p {
+  color: white;
+  padding: 25px;
+  text-align: center;
+  border-bottom: solid 5px var(--red);
+}
+
+.l-list>.item {
+  width: 100%;
+  color: white;
+}
+
+.l-list>.item>.id, .l-list>.item>.name, .l-list>.item>.button {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.l-list>.item>.id {
+  width: 20px;
+  text-align: center;
+}
+
+.l-list>.item>.name {
+  width: calc(100% - 130px);
+  text-align: center;
+}
+
+.l-list>.item>.button {
+  width: 100px;
 }

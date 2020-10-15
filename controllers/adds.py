@@ -1,3 +1,3 @@
 #Také že funkce které prostě nemaju kde byť
-def verifyMethod(request,method):
+def funkcia(request,method):
     pass
