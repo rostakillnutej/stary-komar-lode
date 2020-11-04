@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Loďe</title>
+    <link rel="stylesheet" type="text/css" href="./assets/global.css">
+    <script src="./assets/axios.min.js"></script>
+    <script src="./assets/socket.io.js"></script>
+    <script>
+/*
+      window.onload = #async function()
+
+      $ = document.querySelector.bind(document);
+      function createLobby(event){
+        event.preventDefault();
+        const payload = {
+          name: $('#name').value
+        }
+
+        axios({
+          method: 'post',
+          url: '/lobby/new',
+          data: payload
+        })
+        .then(res => {
+          console.log(res);
+        });
+
+      }
+*/
+
+
+
+      let baseAddr = 'http://localhost:5000';
+      socket = io.connect(baseAddr);
+
+      let userToken = 'none';
+
+      //socket.on('connect', _ => {});
+
+      socket.on('establish',res => {
+        userToken = res.uid
+      });
+
+      
+
+      console.log(userToken);
+
+      setTimeout(_=>console.log(userToken),1000)
+
+      //Toďto ne že by úplně fungovalo
+/*
+      socket.on('disconnect', _ => {
+        console.log('odpojeno')
+      });
+*/
+
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>

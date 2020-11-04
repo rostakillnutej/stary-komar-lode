@@ -1,0 +1,80 @@
+
+:root {
+  --blue1: #00B8EE;
+	--backdrop: rgba(0,0,0,0.3);
+  --shadow1: 2px 2px 5px 2px rgba(0,0,0,0.4);
+}
+
+
+
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/fonts/OpenSans-Bold.ttf') format('truetype');
+  font-weight: normal;
+}
+
+html {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+body {
+	margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+	height: 100%;
+	width: 100;
+	background-color: black;
+	background-image: url('./imgs/back.svg');
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	background-size: cover;
+	font-family: OpenSans;
+}
+
+button {
+  display: block;
+  color: black;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: none;
+  font-family: OpenSans;
+}
+a {
+  text-decoration: none;
+  display: block;
+  color: black;
+}
+input {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+textarea {
+  resize: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}

@@ -1,16 +1,13 @@
 from flask import jsonify
-from db import newDb
+from flask_socketio import send, emit
+import uuid
+from lode import usersUids
 
-def create(req):
-    name = req.json['name'];
-    db = newDb()
-    cur = db.cursor()
-    cur.execute("INSERT INTO lobbies (name) VALUES (?)",(name,))
-    db.commit()
-    return '',201
-
-def get(req):
-    cur = newDb().cursor()
-    cur.execute("SELECT * FROM lobbies")
-    rows = cur.fetchall()
-    return jsonify(rows),201
+def establish():
+    token = str(uuid.uuid4())
+    usersUids.append(token)
+    eventData = {
+        'uid': token
+    }
+    emit('establish', eventData)
+    #print(usersUids)
