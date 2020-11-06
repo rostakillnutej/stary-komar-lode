@@ -4,3 +4,8 @@ No sak potom nekdy
 export FLASK_APP=main.py
 export FLASK_ENV=development
 flask run --host=0.0.0.0 --port=5000
+
+sudo apt install python3-pip
+pip3 install flask SQLAlchemy flask_socketio flask-cors
+
+https://en.wikipedia.org/wiki/Battleship_(game)
