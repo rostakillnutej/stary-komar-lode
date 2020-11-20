@@ -18,4 +18,4 @@ socketio = SocketIO(app,cors_allowed_origins="*")
 
 usersUids = []
 
-from lode import interfaces
+from lode import Interfaces

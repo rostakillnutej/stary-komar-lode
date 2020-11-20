@@ -1,16 +1,35 @@
 <script>
+  import { shipSelected,dock } from '../stores/planning.js';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 	export let props;
   export let index;
 
+  function handleClick(e){
+    if($shipSelected)return;
+    e.stopPropagation();
+    dispatch('select',{e,index});
+  }
+
+  function handleRotate(){
+    let newDock = [...$dock];
+    newDock[index].rotate();
+    dock.update(_ => newDock);
+  }
 
 </script>
 
-<div>
-  <div>{props.name}</div>
+<div class="ship">
+
+  <button class="rotate"
+  on:click={handleRotate}></button>
+
+  <div class="name">{props.name}</div>
   <div>
-    <table on:click={(e) => dispatch('select',index)} cellspacing="0" cellpadding="0">
+    <table on:click={(e) => handleClick(e)}
+      cellspacing="0"
+      cellpadding="0"
+      class="ship-grid">
     {#each props.grid as cols}
       <tr>
         {#each cols as line}
@@ -23,19 +42,26 @@
 </div>
 
 <style>
-table:not(#sticked) {
-  transition: transform 0.6s;
+.ship {
+  position: relative;
+  margin: 10px 0;
 }
-table:hover {
-  transform: scale(1.2);
-}
-tr {
+.name {
+  margin-bottom: 5px;
+  color: white;
   pointer-events: none;
 }
-td.visible {
-  width: 20px;
-  height: 20px;
-  background-color: blue;
-}
+.rotate {
+  right: 0;
+  top: 15px;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  background-image: url('/imgs/rotate.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80%;
 
+}
 </style>

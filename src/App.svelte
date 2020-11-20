@@ -1,7 +1,7 @@
 <script>
-	import Hello from './components/Hello.svelte';
+	import { state } from './stores/global.js';
+	import Hello from './HelloPage.svelte';
 	import GameTable from './DraftPage.svelte';
-	let playing = false;
 	/* Example připojení na sockety
 	import { onMount } from 'svelte';
 		onMount( _ => {
@@ -22,17 +22,19 @@ document.addEventListener('mousemove', e => {
 */
 
 function handleStart() {
-	playing = true;
+	state.update(_ => 'planning');
 }
 
 </script>
 
 <main>
 
-{#if !playing}
+{#if $state == 'menu'}
 	<Hello on:start={() => handleStart()} />
-{:else}
+{:else if $state == 'planning'}
 	<GameTable />
+{:else if $state == 'game'}
+	<div></div>
 {/if}
 
 </main>

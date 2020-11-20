@@ -14,7 +14,7 @@
 @font-face {
   font-family: 'OpenSans';
   src: url('/fonts/OpenSans-Bold.ttf') format('truetype');
-  font-weight: normal;
+  font-weight: bold;
 }
 
 html {
@@ -36,7 +36,7 @@ body {
   right: 0;
   bottom: 0;
 	height: 100%;
-	width: 100;
+	width: 100%;
 	background-color: black;
 	background-image: url('./imgs/back.svg');
 	background-position: 0 0;
@@ -83,4 +83,32 @@ input[type=number] {
   position: fixed;
   top: 0;
   left: 0;
+}
+
+
+.ship-grid:not(#sticked) {
+  transition: transform 0.6s;
+}
+.ship-grid:hover {
+  transform: scale(1.2);
+}
+
+.ship-grid tr {
+  pointer-events: none;
+}
+
+.ship-grid tr td.visible {
+  width: 20px;
+  height: 20px;
+  background: #FD1648;
+  border-right: solid 1px black;
+  border-bottom: solid 1px black;
+}
+
+.ship-grid tr td.visible:last-child {
+  border-right: 0;
+}
+
+.ship-grid tr:last-child td.visible {
+  border-bottom: 0;
 }
