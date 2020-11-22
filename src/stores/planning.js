@@ -25,8 +25,6 @@ let s5 = new Ship('Torpédoborec')
 s5.preCreate(2,1);
 s5.fill(0,0,1,0,1);
 
-
-
 //s3.rotate();
 
 export const dock = writable([s1,s2,s3,s4,s5]);

@@ -24,6 +24,10 @@ bluePrints = [
     'Torpédoborec,default,2,1,11'
 ]
 
+Ovládání AI
+ShipAi.randomGrid()
+ShipAi.gridToStr(ShipAi.randomGrid())
+
 Vytváření objektů tabulky na pokládání lodí
                 #Velikost
 dt = DraftTable(10)
@@ -37,6 +41,33 @@ dt2.parseSaveData(data)
 #Herní pole z plánovacího pole
 gt = GameTable(ShipAi.randomGrid())
 gt.placeShot(x,y)
+
+#Plánovací instance
+pi = PlanInstance()
+              #Index lodě v array
+pi.handleShipRotate(0)
+              #Index lodě v array, x, y
+pi.handlePlace(0,0,0)
+
+print(pi.table.getGridString())
+              #Id lodě v plánovací tabulce
+pi.handleRemove(1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

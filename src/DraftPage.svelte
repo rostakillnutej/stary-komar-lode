@@ -3,8 +3,31 @@
 	import Dock from './components/Dock.svelte'
 	import DraftTable from './components/DraftTable.svelte'
   import { dock,shipSelected } from './stores/planning.js';
-  import { baseAddr } from './stores/global.js';
+  import { baseAddr,baseAddrIo } from './stores/global.js';
   import axios from 'axios'
+  import { onMount } from 'svelte';
+
+  import io from "socket.io-client";
+
+
+
+  let socket = io('http://localhost:8000/plan')
+
+  socket.on('connect', data => {
+    console.log('Připojene na instanci');
+  });
+
+/*
+  //Example připojení na sockety
+    onMount(_ => {
+      const socket = io($baseAddr)
+      socket.on('connect', data => {
+        //console.log('joooj');
+      });
+    });
+*/
+
+
 
   let st = new ShipsTable(10);
   let grid = st.grid
