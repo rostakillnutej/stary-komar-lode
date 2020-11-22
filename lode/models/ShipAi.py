@@ -27,13 +27,12 @@ def randomGrid():
         #Vytváří objekt pokládané lodě
         ship = Ship().parseSaveData(bluePrints[i])
         #Náhodná hodnota jako mezera mezi loděmi
-        dis = randint(2, 3)
+        dis = randint(1, 5)
         #Náhodná hodnota pro otočení lodě
         rot = randint(0, 1)
         #Přidává rozestup
         cur[1] += dis
         #Kontroluje konec řádku
-        #Toto mě nepřide úplně zdravé ale tak co už
         if ship.width > (9 - cur[1]):
             #Jde na nový řádek
             cur[0] += 1
@@ -59,10 +58,14 @@ def randomGrid():
 
             #Kontrola kolize lodě při položení horizontálně
             if rot == 0:
-                for size in range(0,ship.width):
-                    if table.grid[cur[0]][cur[1] + size] > 0:
-                        cur[1] += 1
-                        plan = True
+                try:
+                    for size in range(0,ship.width):
+                        if table.grid[cur[0]][cur[1] + size] > 0:
+                            cur[1] += 1
+                            plan = True
+                except:
+                    print(cur)
+                    print(ship.width)
 
             #Kontrola kolize lodě při položení vertikálně
             else:
@@ -81,7 +84,7 @@ def randomGrid():
     for i in range(flip):
         table.rotate()
 
-    return table.getGridString()
+    return table
 
 
 

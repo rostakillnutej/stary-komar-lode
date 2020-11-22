@@ -14,8 +14,8 @@ class DraftTable:
                 fr.append(0)
             self.grid.append(fr)
 
+    #Generuje nový identifikator lodě
     def newId(self):
-        #Generuje nový identifikator lodě
         keys = [*self.ships]
         #Kontroluje klíče po vymazaných lodích
         i = 1
@@ -25,11 +25,10 @@ class DraftTable:
             i += 1
         return i
 
+    #Pokládá loď
     def placeShip(self,ship,posX,posY,id=0):
-        #Pokládá loď
         if(not(id)):
             id = self.newId()
-
         #Kontroluje jestli je místo na loď
         for y in range(ship.height):
             for x in range(ship.width):
@@ -45,8 +44,8 @@ class DraftTable:
         self.locs[id] = [posX,posY]
         return id
 
+    #Maže loď z pole
     def removeShip(self,id):
-        #Maže loď z pole
         posX = self.locs[id][0]
         posY = self.locs[id][1]
         for y in range(self.ships[id].height):
@@ -58,10 +57,13 @@ class DraftTable:
 
         #Maže pozici lodě a loď samotnou
         del self.locs[id]
-        del self.ships[id]
+        deletedShip = self.ships[id]
+        self.ships[id]
+        #Vrací vymazanou loď
+        return deletedShip
 
+    #Převrací pole
     def rotate(self):
-        #Převrací pole
         newGrid = []
         for x in range(self.size):
             fr = []
@@ -70,9 +72,8 @@ class DraftTable:
             newGrid.append(fr)
         self.grid = newGrid
 
-
+    #Vrací data tabulky s loděmi v kompatnější formě
     def getSaveData(self):
-        #Vrací data tabulky s loděmi v kompatnější formě
         shipsData = {}
         for i in self.ships:
             shipsData[i] = self.ships[i].getSaveData()
@@ -81,8 +82,8 @@ class DraftTable:
         return '{}#{}#{}'.format(self.size,json.dumps(self.locs),json.dumps(shipsData))
 
     #argument: String - velikost mřížky # pozice loďí v JSON # data lodí v JSON
+    #Vytváři z kompaktnějších dat objekt tabulky
     def parseSaveData(self,data):
-        #Vytváři z kompaktnějších dat objekt tabulky
         arr = data.split('#')
         self.size = int(arr[0])
         #Získává pozice lodí a lodě v JSON

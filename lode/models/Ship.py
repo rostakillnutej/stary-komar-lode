@@ -7,8 +7,8 @@ class Ship:
         self.heght = 0
         self.grid = []
 
+    #Vytváří prázdnou mřížku
     def preCreate(self,width,height):
-        #Vytváří prázdnou mřížku
         self.width = width
         self.height = height
         for y in range(height):
@@ -17,8 +17,17 @@ class Ship:
                 fr.append(0)
             self.grid.append(fr)
 
+    #Vrací počet částí lodě které jdou trefit
+    def getShipParts(self):
+        count = 0
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.grid[y][x]:
+                    count += 1
+        return count
+
+    #Převrací tabulku lodě po směru hodin
     def rotate(self):
-        #Převrací tabulku lodě po směru hodin
         newGrid = []
         for x in range(self.width):
             fr = []
@@ -31,15 +40,15 @@ class Ship:
         self.width = self.height
         self.height = mem
 
+    #Funkce na vytváření části loďe
+    #Vylní čtverec podle zadaných souřadnic
     def fill(self,fromX,fromY,toX,toY,val = 1):
-        #Funkce na vytváření části loďe
-        #Vylní čtverec podle zadaných souřadnic
         for y in range(fromY,toY):
             for x in range(fromX,toX):
                 self.grid[y][x] = val
 
+    #Vrací data lodé v kompaktnějším formátu
     def getSaveData(self):
-        #Vrací data lodé v kompaktnějším formátu
         large = []
         for line in self.grid:
             large.append(''.join([str(letter) for letter in line]))
@@ -47,8 +56,8 @@ class Ship:
         return '{},{},{},{},{}'.format(self.name,self.type,self.width,self.height,''.join(large))
 
     #argument: String - nazév loďe,typ lodě,velikost x,velikost y,grid
+    #Přemění data lodě na objekt lodě
     def parseSaveData(self,data):
-        #Přemění data lodě na objekt lodě
         arr = data.split(',')
         self.name = arr[0]
         self.type = arr[1]

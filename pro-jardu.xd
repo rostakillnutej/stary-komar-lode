@@ -9,3 +9,35 @@ sudo apt install python3-pip
 pip3 install flask SQLAlchemy flask_socketio flask-cors
 
 https://en.wikipedia.org/wiki/Battleship_(game)
+
+Vytváření objektů lodí:
+s1 = Ship()
+#Vrátí instanci třídy, použitelné v listech
+s1.parseSaveData('Letadlová loď,default,5,1,11111')
+s1.rotate()
+#Data lodí
+bluePrints = [
+    'Letadlová loď,default,5,1,11111',
+    'Bitevní loď,default,4,1,1111',
+    'Křižník,default,3,1,111',
+    'Ponorka,default,3,1,111',
+    'Torpédoborec,default,2,1,11'
+]
+
+Vytváření objektů tabulky na pokládání lodí
+                #Velikost
+dt = DraftTable(10)
+            #Objekt lodě, pozice X, pozice Y
+dt.placeShip(s1,6,1)
+# vrací data na uložení do DB
+data = dt.getSaveData()
+#Rozbaluje data z db do objektu
+dt2.parseSaveData(data)
+
+#Herní pole z plánovacího pole
+gt = GameTable(ShipAi.randomGrid())
+gt.placeShot(x,y)
+
+
+
+#

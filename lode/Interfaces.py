@@ -1,9 +1,13 @@
 from flask import request, send_from_directory
 from flask_socketio import send, emit
 from lode import app, socketio
-from lode.controllers import Lobby, ShipAi
-from lode.models.Ship import Ship
-from lode.models.DraftTable import DraftTable
+from lode.controllers import Lobby
+from lode.models import ShipAi
+#from lode.models.Ship import Ship
+#from lode.models.DraftTable import DraftTable
+from lode.models.GameTable import GameTable
+
+from lode.models.PlanInstance import PlanInstance
 
 @app.route('/', methods=['GET'])
 def index():
@@ -16,39 +20,48 @@ def new():
     print('ok')
     return '',200
 
+
 #@app.route('/lobby/new', methods=['POST'])
 #def createLobby():
 #    return lobby.create(request)
-ShipAi.randomGrid()
+
+
+
+gt = GameTable(ShipAi.randomGrid())
+print(gt.getGridString())
+
+pi = PlanInstance()
+
+pi.handleShipRotate(0)
+pi.handleShipRotate(1)
+pi.handleShipRotate(2)
+pi.handleShipRotate(3)
+
+pi.handlePlace(0,0,0)
+pi.handlePlace(0,2,3)
+pi.handlePlace(0,2,5)
+pi.handlePlace(0,2,7)
+pi.handlePlace(0,2,9)
+print(pi.table.getGridString())
+pi.handleRemove(1)
+pi.handleRemove(2)
+pi.handleRemove(3)
+pi.handleRemove(4)
+pi.handleRemove(5)
+print(pi.table.getGridString())
+#print(gt.getGridString())
+
+
+
+
+#if gt.placeShot(x,y):
+
+
+#ShipAi.randomGrid()
 #print(ShipAi.randomGrid())
 #ShipAi.gridToStr(ShipAi.randomGrid())
 
 #print(Ship().parseSaveData('Letadlová loď,default,5,1,11111'))
-
-'''
-s1 = Ship()
-s1.parseSaveData('Letadlová loď,default,5,1,11111')
-s2 = Ship()
-s2.parseSaveData('Bitevní loď,default,4,1,1111')
-s3 = Ship()
-s3.parseSaveData('Křižník,default,3,1,111')
-s4 = Ship()
-s4.parseSaveData('Ponorka,default,3,1,111')
-s5 = Ship()
-s5.parseSaveData('Torpédoborec,default,2,1,11')
-
-
-dt = DraftTable(10)
-s1.rotate()
-dt.placeShip(s1,6,1)
-dt.placeShip(s2,1,2)
-dt.placeShip(s3,1,4)
-dt.placeShip(s4,1,6)
-data = dt.getSaveData()
-dt2 = DraftTable()
-dt2.parseSaveData(data)
-print(dt2.getGridString())
-'''
 
 @socketio.on('connect')
 def connect():

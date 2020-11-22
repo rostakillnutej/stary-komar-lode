@@ -1,12 +1,12 @@
 ## Runing Svelte framework
 
-... Start:
+**Start:**
 
 ```bash
 npm run dev
 ```
 
-... Build for production:
+**Build for production:**
 
 ```bash
 npm run build
@@ -14,7 +14,7 @@ npm run build
 
 ##Runing flask api
 
-... Start:
+**Start:**
 
 ```bash
 python3 main.py
