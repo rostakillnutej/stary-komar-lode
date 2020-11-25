@@ -6,11 +6,12 @@ class InstanceManager:
     def __init__(self):
         self.ins = {}
 
-    #def add(self,type,id):
+    #Vytváři novou instanci
     def add(self,id):
-        print('Vytvořit instaci s id: ' + str(id))
-        pass
+        self.ins[id] = PlanInstance()
 
+    #Maže instanci po odpojení
     def delete(self,id):
-        print('Vymazat instaci s id: ' + str(id))
-        pass
+        del self.ins[id]
+
+    
