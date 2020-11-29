@@ -1,63 +1,46 @@
 <script>
-  import ShipsTable from './objects/ShipsTable.js'
 	import Dock from './components/Dock.svelte'
 	import DraftTable from './components/DraftTable.svelte'
-  import { dock,shipSelected } from './stores/planning.js';
-  import { baseAddr,baseAddrIo } from './stores/global.js';
+  import { socket,table,tableSize,dock,shipSelected } from './stores/planning.js';
+  import { baseAddr } from './stores/global.js';
   import axios from 'axios'
   import { onMount } from 'svelte';
+  import io from 'socket.io-client';
+  import * as lode from './lodeLib.js';
 
-  import io from "socket.io-client";
+	//Připojuje se na server
+  socket.update(_ => io($baseAddr + '/plan'))
 
-
-
-  let socket = io('http://localhost:8000/plan')
-
-  socket.on('connect', data => {
-    console.log('Připojene na instanci');
+	//Event který se zavolá když je připojeno
+  $socket.on('connect', data => {
+    console.log('Socket OK')
+  });
+	//Event na získání lodí
+  $socket.emit('getShips');
+	//Event který čeká na vrácení lodí
+  $socket.on('returnShips', data => {
+    let strs = JSON.parse(data);
+    let ships = strs.map(str => {
+      return lode.parseShipSaveData(str)
+    })
+    dock.update(_ => ships)
+  });
+	//Event na celé tabulky
+  $socket.emit('getDraftTable');
+	//Event který čeká na vrácení celé tabulky
+  $socket.on('returnDraftTable', data => {
+    table.update(_ => lode.parseDraftTableSaveData(data))
+    tableSize.update(_ => $table.length)
   });
 
-/*
-  //Example připojení na sockety
-    onMount(_ => {
-      const socket = io($baseAddr)
-      socket.on('connect', data => {
-        //console.log('joooj');
-      });
-    });
-*/
+	$socket.on('finishStatus', data => {
+		if(data){
+			$socket.disconnect(true)
+		}
+  });
 
-
-
-  let st = new ShipsTable(10);
-  let grid = st.grid
-
-  function deselectShip(e){
-    if(!$shipSelected) return;
-    document.querySelector('#sticked').remove()
-    const newDock = [...$dock,$shipSelected];
-    dock.update(_ => newDock);
-    shipSelected.update(_ => false)
-    if(st.locs.h){
-      st.removeShip('h')
-    }
-    grid = st.grid
-  }
-
-  function handleStart(){
-    axios({
-      method: 'post',
-      url: $baseAddr + '/game/new',
-      data: {
-        grid: st.getSaveData()
-      }
-    })
-    .then(res => {
-      console.log(res)
-    })
-    .catch(res => {
-      console.log(res)
-    });
+  function handleFinish(){
+    $socket.emit('finish')
   }
 
 
@@ -65,12 +48,12 @@
 
 <main>
 	<div class="ship-storage">
-    <Dock on:deselect={deselectShip}/>
+    <Dock/>
   </div>
   <div class="game-table">
-	<DraftTable st={st} grid={grid} on:update={_ => grid = st.grid}/>
+	<DraftTable />
   </div>
-  <button class="game-button" on:click={handleStart}>HOTOVO</button>
+  <button class="game-button" on:click={handleFinish}>HOTOVO</button>
 </main>
 
 <style>

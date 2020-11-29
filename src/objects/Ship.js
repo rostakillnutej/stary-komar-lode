@@ -70,20 +70,6 @@ class Ship {
     return this.width + ',' + this.height + ',' + large.join('');
   }
 
-  parseSaveData(str){
-    //Přemění kompaktnější data na data lodě
-    const arr = str.split(',')
-    this.width = arr[0];
-    this.height = arr[1];
-    for(let i = 0; i < arr[1]; i++) {
-      let fragment = [];
-      for(let j = 0; j < arr[0]; j++){
-        fragment.push(arr[2][i+j]);
-      }
-      this.grid.push(fragment)
-    }
-  }
-
   /* TESTOVACÍ */
   getGridString(){
     let largeStr = []

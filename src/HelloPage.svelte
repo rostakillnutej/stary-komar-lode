@@ -5,7 +5,7 @@
 
 <main>
 	<div class="logo"></div>
-	<button class="lode-btn" on:click={() => dispatch('start')}>HRÁT</button>
+	<button class="lode-btn" on:click={() => dispatch('start')}>PLÁNOVAT</button>
 </main>
 
 <style>

@@ -33,22 +33,23 @@ class PlanInstance:
     #Pokládá loď, vrací id položené lodě
     def handlePlace(self,index,x,y):
         if not(self.validId(index)):
-            return False
+            return [False]
         ship = self.dock[index]
         #Kontroluje jestli se položení povedlo
         placedId = self.table.placeShip(ship,x,y)
         if placedId:
             #Maže loď z doku
             self.dock.pop(index)
-            return placedId
-        return False
+            return [placedId,x,y]
+        return [False]
 
     #Maže loď z tabulky, vrací bolean jako výsledek
     def handleRemove(self,shipId):
         if not(self.validId(shipId,True)):
-            return False
-        self.dock.append(self.table.removeShip(shipId))
-        return True
+            return [False]
+        data = self.table.removeShip(shipId)
+        self.dock.append(data[0])
+        return data
 
     #Rotuje loď v doku, vrací bolean jako výsledek
     def handleShipRotate(self,index):
@@ -57,8 +58,11 @@ class PlanInstance:
         self.dock[index].rotate()
         return True
 
-
-
+    def getDocks(self):
+        ships = []
+        for i in range(len(self.dock)):
+            ships.append(self.dock[i].getSaveData())
+        return ships
 
 
 

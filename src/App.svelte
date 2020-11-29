@@ -1,25 +1,26 @@
 <script>
-	import { state } from './stores/global.js';
+	import { state,baseAddr } from './stores/global.js';
+	import axios from 'axios'
+	import { onMount } from 'svelte';
 	import Hello from './HelloPage.svelte';
 	import GameTable from './DraftPage.svelte';
-	/* Example připojení na sockety
-	import { onMount } from 'svelte';
-		onMount( _ => {
-	    const socket = io($baseAddr)
-	  	socket.on('connect', data => {
-	    	//console.log('joooj');
-	  	});
+
+
+	onMount( _ => {
+		axios({
+		  method: 'get',
+		  url: $baseAddr + '/user',
+			withCredentials: true
+		})
+		.then(res => {
+			console.log('user OK')
+		  state.update(_ => 'menu');
+		})
+		.catch(res => {
+		  console.log('user not OK')
 		});
-	*/
+	});
 
-
-/*
-document.addEventListener('mousemove', e => {
-	const elem = document.getElementById('cursorStick')
-	elem.style.transform = 'translateY('+ (e.clientY - 40) + 'px)';
-	elem.style.transform += 'translateX('+ (e.clientX - 20) + 'px)';
-},false);
-*/
 
 function handleStart() {
 	state.update(_ => 'planning');

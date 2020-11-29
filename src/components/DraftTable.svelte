@@ -1,51 +1,8 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
-  import { dock,shipSelected } from '../stores/planning.js';
-  import ShipsTable from '../objects/ShipsTable.js'
-  export let st;
-  export let grid;
-
-  function putShip(elem){
-    const x = parseInt(elem.getAttribute('x'));
-    const y = parseInt(elem.getAttribute('y'));
-    if(x + $shipSelected.width > st.size || y + $shipSelected.height > st.size)return
-    if(!st.placeShip($shipSelected,x,y))return;
-    console.log(st.locs)
-    dispatch('update');
-    shipSelected.update(_ => false);
-    const exist = document.querySelector('#sticked');
-    if(exist)exist.remove();
-  }
-
-  function getShip(id){
-    shipSelected.update(_ => st.ships[id])
-    const ship = st.ships[id].grid
-    st.removeShip(id)
-    dispatch('update')
-    //Vytvoření tabulky která se pohybuje s myší
-    const cln = document.createElement('table');
-    cln.setAttribute('id', 'sticked');
-    cln.setAttribute('cellspacing', '0');
-    cln.setAttribute('cellpadding', '0');
-    cln.classList.add('ship-grid');
-    ship.forEach((row, i) => {
-      const tr = document.createElement('tr');
-      row.forEach((cell, j) => {
-        const td = document.createElement('td');
-        if(cell) td.classList.add('visible');
-        tr.appendChild(td);
-      });
-      cln.appendChild(tr);
-    });
-    document.body.appendChild(cln);
-    /* Tady nevím jestli se potom ty listenery mažou*/
-    document.addEventListener('mousemove', e => {
-    	cln.style.transform = 'translateY('+ (e.clientY + 10) + 'px)';
-    	cln.style.transform += 'translateX('+ (e.clientX - 20) + 'px)';
-    },false);
-  }
-
+  import { socket,table,tableSize,dock,shipSelected,isHover,hoverPos } from '../stores/planning.js';
+  import * as lode from '../lodeLib.js'
 
   function handleClick(e){
     //Kliknutí na tabulku s planováním
@@ -53,32 +10,78 @@
     if(elem.tagName != 'TD') return;
     //Event na přidání lodě z kurzoru
     if($shipSelected){
-      putShip(elem);
+      const x = parseInt(elem.getAttribute('x'));
+      const y = parseInt(elem.getAttribute('y'));
+      const index = $dock.indexOf($shipSelected);
+      $socket.emit('placeShip',index,x,y)
       return;
     }
     //Event na odebraní lodě zpátky na kurzor
     const id = parseInt(elem.getAttribute('cell'));
     if(id){
-      getShip(id);
+      $socket.emit('removeShip',id)
     }
 
   }
 
+  $socket.on('placeStatus', data => {
+    const dataArr = JSON.parse(data)
+    if(dataArr[0]){
+      table.update(_ => {
+        isHover.update(_ => false);
+        let newTable = lode.removeShip($table,$shipSelected,$hoverPos[0],$hoverPos[1],'h')
+        newTable = lode.placeShip(newTable,$shipSelected,dataArr[1],dataArr[2],dataArr[0])
+        return newTable
+      })
+      const index = $dock.indexOf($shipSelected);
+      const newDock = [...$dock];
+      newDock.splice(index,1)
+      dock.update(_ => newDock);
+      shipSelected.update(_ => false);
+      const exist = document.querySelector('#sticked');
+      if(exist)exist.remove();
+    }
+  });
+
+  $socket.on('removeStatus', data => {
+    const dataArr = JSON.parse(data)
+    if(dataArr[0]){
+      const removed = lode.parseShipSaveData(dataArr[0])
+      const newDock = [...$dock,removed];
+      dock.update(_ => newDock)
+      table.update(_ => {
+        return lode.removeShip($table,removed,dataArr[1],dataArr[2],dataArr[3])
+      })
+    }
+  });
+
   function handleOver(e){
     const elem = e.target
     if(elem.tagName != 'TD' || $shipSelected == false) return;
-
-    if(st.ships['h'])st.removeShip('h')
     const x = parseInt(elem.getAttribute('x'));
     const y = parseInt(elem.getAttribute('y'));
-    if(x + $shipSelected.width > st.size || y + $shipSelected.height > st.size)return
-    if(!st.placeShip($shipSelected,x,y,true))return
-    dispatch('update')
+    //Když se pozice nezměnila
+    if($isHover && $hoverPos[0] == x && $hoverPos[1] == y) return;
+    //Vymaže stré nastínění
+    if($isHover){
+      table.update(_ => {
+        return lode.removeShip($table,$shipSelected,$hoverPos[0],$hoverPos[1],'h')
+      })
+      isHover.update(_ => false)
+    }
+    //Kontroluje správnost nastínění
+    if(x + $shipSelected.width > $tableSize || y + $shipSelected.height > $tableSize) return;
+    const result = lode.placeShip($table,$shipSelected,x,y)
+    if(result){
+      table.update(_ => result)
+      hoverPos.update(_ => [x,y]);
+      isHover.update(_ => true);
+    }
   }
 
   function checkBorder(y,x,val,str){
     if(y > 9 || y < 0 || x > 9 || x < 0) return ''
-    if(grid[y][x] == val) return str
+    if($table[y][x] == val) return str
     return ''
   }
 
@@ -92,19 +95,20 @@
     return borders;
   }
 
-
 </script>
 <table on:click={(e) => handleClick(e)}
   on:mousemove={(e) => handleOver(e)}
   cellspacing="0"
   cellpadding="0">
-{#each grid as cols, y}
-  <tr>
-    {#each cols as cell, x}
-      <td {y}{x}{cell} class:visible="{cell}" class={getBorderClass(y,x,cell)}></td>
-    {/each}
-  </tr>
-{/each}
+{#if $table}
+  {#each $table as cols, y}
+    <tr>
+      {#each cols as cell, x}
+        <td {y}{x}{cell} class:visible="{cell}" class={getBorderClass(y,x,cell)}></td>
+      {/each}
+    </tr>
+  {/each}
+{/if}
 </table>
 
 
