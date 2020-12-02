@@ -1,3 +1,15 @@
+export function emptyTable(size) {
+  let grid = []
+  for(let i = 0; i < size; i++) {
+    let fragment = [];
+    for(let j = 0; j < size; j++){
+      fragment.push(0);
+    }
+    grid.push(fragment);
+  }
+  return grid;
+}
+
 //Přemění kompaktnější data na data plánovací tabulky
 export function parseDraftTableSaveData(str){
   const arr = str.split('#')
@@ -74,6 +86,22 @@ export function removeShip(grid,ship,posX,posY,id){
     }
   }
   return grid
+}
+
+//Vytváři bordery loděm
+function checkBorder(table,y,x,val,str){
+  if(y > 9 || y < 0 || x > 9 || x < 0) return ''
+  if(table[y][x] == val) return str
+  return ''
+}
+export function getBorderClass(table,y,x,cell){
+  if (cell == 'h' || cell == 0) return '';
+  let borders = ''
+  borders += checkBorder(table,y,x+1,cell,'nb-r ');
+  borders += checkBorder(table,y+1,x,cell,'nb-b ');
+  borders += checkBorder(table,y,x-1,cell,'nb-l ');
+  borders += checkBorder(table,y-1,x,cell,'nb-t ');
+  return borders;
 }
 
 //Vytvoření tabulky která se pohybuje s myší

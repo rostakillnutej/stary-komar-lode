@@ -45,16 +45,14 @@ def user():
 
 
 #Správce plánovacích instancí
-imp = InstanceManager()
+imp = InstanceManager('plan')
 #Všechny cesty které manipulují s planovacímí instancemi
 @socketio.on('connect', namespace='/plan')
 def conPlan():
     imp.add(request.sid,isUser(request))
-    print(imp.ins)
 @socketio.on('disconnect', namespace='/plan')
 def disconPlan():
     imp.delete(request.sid)
-    print(imp.ins)
 @socketio.on('getShips', namespace='/plan')
 def getShips():
     ins = imp.getIns(request.sid)
@@ -114,14 +112,44 @@ def fnish():
 
 
 
-
-
-
-
 #Správce hracích instancí
-#imp = InstanceManager()
+img = InstanceManager('game')
 
 #Všechny cesty které manipulují s hracímí instancemi
+@socketio.on('connect', namespace='/game')
+def conGame():
+    data = isUser(request)
+    if not(data) or data.currentTable == '':
+        emit('userError',False, namespace='/game')
+        return
+
+    img.add(request.sid,data)
+    payload = img.getIns(request.sid).returnData
+    emit('returnTable',payload, namespace='/game')
+
+
+@socketio.on('disconnect', namespace='/game')
+def disconGame():
+    img.delete(request.sid)
+    #print(imp.ins)
+
+@socketio.on('hit', namespace='/game')
+def hitEvent(pos):
+    ins = img.getIns(request.sid)
+    if not(ins):
+        return False
+    #PŘIDAT VALIDACI VSTUPU BY BYLO DOBRÉ
+    data = pos.split('#')
+    result = ins.handleHit(int(data[0]),int(data[1]))
+    if result[0]:
+        emit('eTableUpdate',pos + '#' + str(result[1]), namespace='/game')
+        #emit('mTableUpdate', , namespace='/game')
+
+
+
+
+
+
 
 
 

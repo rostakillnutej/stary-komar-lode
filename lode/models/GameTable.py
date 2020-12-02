@@ -21,7 +21,6 @@ class GameTable:
 
     #Pokládá střelu do mřížky
     def placeShot(self,posX,posY):
-        print(self.empty)
         pos = posY * self.size + posX
         #Zjištuje validní souřadnie a jestli na místě už neni střela, a jestli probíhá hra
         if posX >= self.size or posY >= self.size or not(pos in self.empty) or not(self.state):

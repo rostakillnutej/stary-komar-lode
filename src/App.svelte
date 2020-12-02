@@ -3,7 +3,8 @@
 	import axios from 'axios'
 	import { onMount } from 'svelte';
 	import Hello from './HelloPage.svelte';
-	import GameTable from './DraftPage.svelte';
+	import DraftPage from './DraftPage.svelte';
+	import GamePage from './GamePage.svelte';
 
 
 	onMount( _ => {
@@ -33,9 +34,9 @@ function handleStart() {
 {#if $state == 'menu'}
 	<Hello on:start={() => handleStart()} />
 {:else if $state == 'planning'}
-	<GameTable />
+	<DraftPage />
 {:else if $state == 'game'}
-	<div></div>
+	<GamePage />
 {/if}
 
 </main>

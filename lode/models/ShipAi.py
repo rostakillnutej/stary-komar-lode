@@ -27,7 +27,7 @@ def randomGrid():
         #Vytváří objekt pokládané lodě
         ship = Ship().parseSaveData(bluePrints[i])
         #Náhodná hodnota jako mezera mezi loděmi
-        dis = randint(1, 5)
+        dis = randint(1, 3)
         #Náhodná hodnota pro otočení lodě
         rot = randint(0, 1)
         #Přidává rozestup
@@ -64,6 +64,7 @@ def randomGrid():
                             cur[1] += 1
                             plan = True
                 except:
+                    print('SHIP-AI: CHYBA: DOŠLO MÍSTO')
                     print(cur)
                     print(ship.width)
 
@@ -87,9 +88,11 @@ def randomGrid():
     return table
 
 
-
-
-
+def randomHit(empty):
+    key = randint(0,len(empty)-1)
+    x = empty[key] % self.player.size
+    y = empty[key] // self.player.size
+    return [x,y]
 
 
 

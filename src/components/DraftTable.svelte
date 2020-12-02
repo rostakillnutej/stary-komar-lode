@@ -79,22 +79,6 @@
     }
   }
 
-  function checkBorder(y,x,val,str){
-    if(y > 9 || y < 0 || x > 9 || x < 0) return ''
-    if($table[y][x] == val) return str
-    return ''
-  }
-
-  function getBorderClass(y,x,cell){
-    if (cell == 'h' || cell == 0) return '';
-    let borders = ''
-    borders += checkBorder(y,x+1,cell,'nb-r ');
-    borders += checkBorder(y+1,x,cell,'nb-b ');
-    borders += checkBorder(y,x-1,cell,'nb-l ');
-    borders += checkBorder(y-1,x,cell,'nb-t ');
-    return borders;
-  }
-
 </script>
 <table on:click={(e) => handleClick(e)}
   on:mousemove={(e) => handleOver(e)}
@@ -104,7 +88,7 @@
   {#each $table as cols, y}
     <tr>
       {#each cols as cell, x}
-        <td {y}{x}{cell} class:visible="{cell}" class={getBorderClass(y,x,cell)}></td>
+        <td {y}{x}{cell} class:visible="{cell}" class={lode.getBorderClass($table,y,x,cell)}></td>
       {/each}
     </tr>
   {/each}

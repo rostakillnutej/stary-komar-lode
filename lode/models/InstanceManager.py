@@ -1,20 +1,26 @@
 from lode.models.PlanInstance import PlanInstance
 from lode.models.DraftTable import DraftTable
-#from lode.models.GameInstance import GameInstance
+from lode.models.GameInstance import GameInstance
 
 class InstanceManager:
 
-    def __init__(self):
+    def __init__(self,type):
         self.ins = {}
+        self.type = type
 
     #Vytváři novou instanci
     def add(self,id,user):
-        if user and user.currentTable != '':
+        if self.type == 'plan':
+            if user and user.currentTable != '':
+                table = DraftTable()
+                table.parseSaveData(user.currentTable)
+                self.ins[id] = PlanInstance(True,table)
+            else:
+                self.ins[id] = PlanInstance()
+        elif self.type == 'game' :
             table = DraftTable()
             table.parseSaveData(user.currentTable)
-            self.ins[id] = PlanInstance(True,table)
-        else:
-            self.ins[id] = PlanInstance()
+            self.ins[id] = GameInstance(table)
 
     #Maže instanci po odpojení
     def delete(self,id):

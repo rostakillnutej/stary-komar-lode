@@ -2,7 +2,7 @@
 	import Dock from './components/Dock.svelte'
 	import DraftTable from './components/DraftTable.svelte'
   import { socket,table,tableSize,dock,shipSelected } from './stores/planning.js';
-  import { baseAddr } from './stores/global.js';
+  import { baseAddr,state } from './stores/global.js';
   import axios from 'axios'
   import { onMount } from 'svelte';
   import io from 'socket.io-client';
@@ -36,6 +36,7 @@
 	$socket.on('finishStatus', data => {
 		if(data){
 			$socket.disconnect(true)
+			state.update(_ => 'game');
 		}
   });
 
