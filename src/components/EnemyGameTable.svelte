@@ -28,6 +28,7 @@
    });
 
 
+
 </script>
 
 <main>
@@ -72,7 +73,6 @@ td[cell="1"]::after {
   box-sizing: border-box;
   border: solid 2px white;
   margin: 0 auto;
-
 }
 
 td[cell="2"]::after {

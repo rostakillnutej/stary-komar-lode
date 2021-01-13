@@ -127,6 +127,13 @@ def conGame():
     payload = img.getIns(request.sid).returnData
     emit('returnTable',payload, namespace='/game')
 
+    if img.getIns(request.sid).changed:
+        x = ins.changed[0][0]
+        y = ins.changed[0][1]
+        val = ins.changed[1]
+        emit('myTableUpdate','{}#{}#{}'.format(x,y,val), namespace='/game')
+
+
 
 @socketio.on('disconnect', namespace='/game')
 def disconGame():
@@ -145,8 +152,18 @@ def hitEvent(pos):
         emit('eTableUpdate',pos + '#' + str(result[1]), namespace='/game')
         #emit('mTableUpdate', , namespace='/game')
 
+    if ins.changed:
+        x = ins.changed[0][0]
+        y = ins.changed[0][1]
+        val = ins.changed[1]
+        emit('myTableUpdate','{}#{}#{}'.format(x,y,val), namespace='/game')
 
+    print(result)
+    print(ins.winner)
 
+    if ins.winner:
+        print('teď my měla hra zkončit')
+        emit('endGame', ins.winner, namespace='/game')
 
 
 

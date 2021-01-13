@@ -10,11 +10,12 @@ class GameInstance:
         self.ai = GameTable(randomGrid())
         self.turn = 1 #randint(0,1)
         self.winner = False
+        self.changed = False
 
     def aiHit(self):
         self.turn = not(self.turn)
-        pos = randomHit(self.player.empty)
-        self.player.placeShot(pos[0],pos[0])
+        pos = randomHit(self.player.empty,self.player.size)
+        self.player.placeShot(pos[0],pos[1])
         if not(self.player.state):
             self.winner = 'ai'
 
@@ -22,6 +23,7 @@ class GameInstance:
 
 
     def handleHit(self,x,y):
+        self.changed = False
         if self.turn:
             result = self.ai.placeShot(x,y)
             if result:
@@ -30,7 +32,7 @@ class GameInstance:
                     self.winner = 'player'
                     return [result,self.ai.shipHit]
                 else:
-                    self.aiHit()
+                    self.changed = self.aiHit()
                     return [result,self.ai.shipHit]
 
             else:
@@ -38,6 +40,7 @@ class GameInstance:
                 return [False]
         else:
             #Zahraje AIČKO kvůli bugu třeba
+            self.changed = self.aiHit()
             return [False]
 
 

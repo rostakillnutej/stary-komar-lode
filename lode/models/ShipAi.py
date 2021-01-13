@@ -88,10 +88,10 @@ def randomGrid():
     return table
 
 
-def randomHit(empty):
+def randomHit(empty,size):
     key = randint(0,len(empty)-1)
-    x = empty[key] % self.player.size
-    y = empty[key] // self.player.size
+    x = empty[key] % size
+    y = empty[key] // size
     return [x,y]
 
 
