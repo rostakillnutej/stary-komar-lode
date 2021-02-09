@@ -8,12 +8,19 @@
   import io from 'socket.io-client';
   import * as lode from './lodeLib.js';
 
+
+	let dif = 2
+
+	function setDif(e) {
+		 dif = e.target.value;
+	}
+
 	//Připojuje se na server
   socket.update(_ => io($baseAddr + '/plan'))
 
 	//Event který se zavolá když je připojeno
   $socket.on('connect', data => {
-    console.log('Socket OK')
+
   });
 	//Event na získání lodí
   $socket.emit('getShips');
@@ -40,8 +47,9 @@
 		}
   });
 
-  function handleFinish(){
-    $socket.emit('finish')
+  function handleFinish(e){
+		e.preventDefault();
+    $socket.emit('finish',dif)
   }
 
 
@@ -54,7 +62,31 @@
   <div class="game-table">
 	<DraftTable />
   </div>
-  <button class="game-button" on:click={handleFinish}>HOTOVO</button>
+
+
+
+	<form on:submit={handleFinish}>
+		<div>
+
+			<input type="radio" on:change={setDif} id="r1" name="dif" class="dif-input" value="1">
+			<label for="r1" class="dif-label">Lehká</label>
+
+			<input type="radio" on:change={setDif} id="r2" name="dif" class="dif-input" value="2" checked>
+			<label for="r2" class="dif-label">Střední</label>
+
+			<input type="radio" on:change={setDif} id="r3" name="dif" class="dif-input" value="3">
+			<label for="r3" class="dif-label">Těžká</label>
+
+		</div>
+
+		<button type="submit"
+			class="game-button"
+			>HOTOVO</button>
+
+			<p>Pro pokračování je potřeba položit všechny lodě</p>
+
+	</form>
+
 </main>
 
 <style>
@@ -62,15 +94,52 @@
   margin: 20px;
   float: left;
 }
+
+form {
+	float: left;
+	margin-top: 25px;
+	height: 400px;
+	width: 200px;
+}
+
+p {
+	color: white;
+	text-align: center;
+}
+
+.dif-input {
+	display: none;
+}
+
+.dif-label {
+	display: block;
+	height: 40px;
+	width: 120px;
+	line-height: 40px;
+	text-align: center;
+	background: rgba(0,0,0,0.3);
+	margin: 5px auto;
+	color: white;
+}
+
+.dif-input:checked + .dif-label {
+	border: solid 2px var(--blue1);
+	background: rgba(0,0,0,0.5);
+}
+
+.dif-label:hover {
+	background-color: rgba(0,0,0,0.6);
+}
+
 .game-button {
+	margin: 25px auto;
   padding: 12px;
   font-size: 1.2em;
-  background-color: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.3);
   color: white;
 }
 
 .game-button:hover {
   background-color: rgba(0,0,0,0.6)
 }
-
 </style>

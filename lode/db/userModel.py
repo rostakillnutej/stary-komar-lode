@@ -5,5 +5,6 @@ class User(DB.Model):
     id = DB.Column(DB.Integer, primary_key=True)
     token = DB.Column(DB.String)
     currentTable = DB.Column(DB.Text)
+    dif = DB.Column(DB.Integer)
 
 DB.create_all()

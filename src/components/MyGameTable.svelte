@@ -29,38 +29,38 @@
 </script>
 
 <main>
+<div class="table-bind">
+  <table
+    class="holes"
+    cellspacing="0"
+    cellpadding="0">
+  {#if $myTableHoles}
+    {#each $myTableHoles as cols, y}
+      <tr>
+        {#each cols as cell, x}
+          <td {y}{x}{cell} ></td>
+        {/each}
+      </tr>
+    {/each}
+  {/if}
+  </table>
 
-<table
-  class="holes"
-  cellspacing="0"
-  cellpadding="0">
-{#if $myTableHoles}
-  {#each $myTableHoles as cols, y}
-    <tr>
-      {#each cols as cell, x}
-        <td {y}{x}{cell} ></td>
-      {/each}
-    </tr>
-  {/each}
-{/if}
-</table>
-
-<table
-  class="ships"
-  cellspacing="0"
-  cellpadding="0">
-{#if $myTable}
-  {#each $myTable as cols, y}
-    <tr>
-      {#each cols as cell, x}
-        <td {y}{x}{cell} class:visible="{cell}"
-          class={lode.getBorderClass($myTable,y,x,cell) + getHole(y,x)}></td>
-      {/each}
-    </tr>
-  {/each}
-{/if}
-</table>
-
+  <table
+    class="ships"
+    cellspacing="0"
+    cellpadding="0">
+  {#if $myTable}
+    {#each $myTable as cols, y}
+      <tr>
+        {#each cols as cell, x}
+          <td {y}{x}{cell} class:visible="{cell}"
+            class={lode.getBorderClass($myTable,y,x,cell) + getHole(y,x)}></td>
+        {/each}
+      </tr>
+    {/each}
+  {/if}
+  </table>
+</div>
 </main>
 
 <style>
@@ -68,16 +68,24 @@ table {
 
 }
 
+.table-bind {
+  position: relative;
+}
+
 .holes {
   position: absolute;
   z-index: 2;
+/*
   top: 4px;
   left: 4px;
+*/
+margin-top: 4px;
+margin-left: 4px;
 }
 
 .holes td {
-  height: 31.6px;
-  width: 31.6px;
+  height: 32px;
+  width: 32px;
   //background: green;
 }
 

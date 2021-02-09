@@ -4,7 +4,7 @@ class Ship:
         self.name = name
         self.type = type
         self.width = 0
-        self.heght = 0
+        self.height = 0
         self.grid = []
 
     #Vytváří prázdnou mřížku

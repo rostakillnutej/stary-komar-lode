@@ -11,6 +11,35 @@ bluePrints = [
     'Torpédoborec,default,2,1,11'
 ]
 
+def randomGridHard(dif):
+    table = DraftTable(10)
+    #Indexy dat s loděmi
+    vals = [0,1,2,3,4]
+
+    #Zamíchání indexů s loděmi, změní pořadí pokladání lodí
+    shuffle(vals)
+    for i in vals:
+        ship = Ship().parseSaveData(bluePrints[i])
+        for j in range(randint(0,3)):
+            ship.rotate()
+        while True:
+            x = randint(0, 9 - ship.width)
+            y = randint(0, 9 - ship.height)
+            placed = table.placeShip(ship,x,y)
+            if(placed):
+                break;
+
+        for j in range(randint(0,3)):
+            ship.rotate()
+
+    if(dif):
+        for j in range(randint(0,3)):
+            table.rotate()
+
+    return table
+
+
+
 #Generuje grid bez mezery mezi loděmí
 def randomGrid():
     table = DraftTable(10)
@@ -27,7 +56,7 @@ def randomGrid():
         #Vytváří objekt pokládané lodě
         ship = Ship().parseSaveData(bluePrints[i])
         #Náhodná hodnota jako mezera mezi loděmi
-        dis = randint(1, 3)
+        dis = randint(1, 2)
         #Náhodná hodnota pro otočení lodě
         rot = randint(0, 1)
         #Přidává rozestup
@@ -64,9 +93,7 @@ def randomGrid():
                             cur[1] += 1
                             plan = True
                 except:
-                    print('SHIP-AI: CHYBA: DOŠLO MÍSTO')
-                    print(cur)
-                    print(ship.width)
+                    pass
 
             #Kontrola kolize lodě při položení vertikálně
             else:

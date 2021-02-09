@@ -10,14 +10,15 @@ from flask_sqlalchemy import SQLAlchemy
 
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
-app = Flask(__name__, static_url_path='', static_folder='static')
+app = Flask(__name__, static_url_path='', static_folder='../public')
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 cors = CORS(app, resources={"*": {"supports_credentials": "true"}})
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/main.sqlite3'
-app.config['SECRET_KEY'] = 'toto-sifruje-websocket-komunikaci'
-socketio = SocketIO(app,cors_allowed_origins="*")
+app.config['SECRET_KEY'] = 'OlK@swWkKK-gSa'
+#socketio = SocketIO(app,cors_allowed_origins="*")
+socketio = SocketIO(app)
 DB = SQLAlchemy(app)
 
 

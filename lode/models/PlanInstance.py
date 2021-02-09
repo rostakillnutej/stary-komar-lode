@@ -37,6 +37,7 @@ class PlanInstance:
         ship = self.dock[index]
         #Kontroluje jestli se položení povedlo
         placedId = self.table.placeShip(ship,x,y)
+
         if placedId:
             #Maže loď z doku
             self.dock.pop(index)

@@ -1,16 +1,43 @@
 from lode.models.GameTable import GameTable
-from lode.models.ShipAi import randomGrid,randomHit
-from random import randint
+from lode.models.ShipAi import randomGrid,randomGridHard,randomHit
+from flask_socketio import send, emit
+from random import shuffle,randint
+
 
 class GameInstance:
 
-    def __init__(self,table):
+    def __init__(self,table,dif):
         self.returnData = table.getSaveData()
         self.player = GameTable(table)
-        self.ai = GameTable(randomGrid())
-        self.turn = 1 #randint(0,1)
+        if(dif == 1):
+            self.ai = GameTable(randomGrid())
+        else:
+            self.ai = GameTable(randomGridHard(dif == 3))
+
+        if(dif == 1):
+            limit = 80
+        elif(dif == 2):
+            limit = 65
+        else:
+            limit = 40
+
+        newArr = []
+        shuffle(self.player.empty)
+        for i in self.player.empty:
+            x = i % self.player.size
+            y = i // self.player.size
+            if self.player.grid[y][x]:
+                newArr.append(i)
+                continue
+            if limit > 0:
+                newArr.append(i)
+                limit -= 1
+        self.player.empty = newArr
+
+        self.turn = 1
         self.winner = False
         self.changed = False
+        self.dif = dif
 
     def aiHit(self):
         self.turn = not(self.turn)
@@ -28,7 +55,7 @@ class GameInstance:
             result = self.ai.placeShot(x,y)
             if result:
                 self.turn = not(self.turn)
-                if self.ai.sunkIds == 5:
+                if len(self.ai.sunkIds) > 4:
                     self.winner = 'player'
                     return [result,self.ai.shipHit]
                 else:

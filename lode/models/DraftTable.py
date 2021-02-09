@@ -18,9 +18,11 @@ class DraftTable:
     def newId(self):
         keys = [*self.ships]
         #Kontroluje klíče po vymazaných lodích
+
         i = 1
         for key in keys:
-            if(key != i):
+
+            if( key != i and not(i in keys) ):
                 return i
             i += 1
         return i

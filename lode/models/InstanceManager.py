@@ -20,7 +20,7 @@ class InstanceManager:
         elif self.type == 'game' :
             table = DraftTable()
             table.parseSaveData(user.currentTable)
-            self.ins[id] = GameInstance(table)
+            self.ins[id] = GameInstance(table,user.dif)
 
     #Maže instanci po odpojení
     def delete(self,id):

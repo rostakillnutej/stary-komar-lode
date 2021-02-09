@@ -5,6 +5,7 @@
 	import Hello from './HelloPage.svelte';
 	import DraftPage from './DraftPage.svelte';
 	import GamePage from './GamePage.svelte';
+	import FinishPage from './FinishPage.svelte';
 
 
 	onMount( _ => {
@@ -37,6 +38,8 @@ function handleStart() {
 	<DraftPage />
 {:else if $state == 'game'}
 	<GamePage />
+{:else if $state == 'gameEnd'}
+	<FinishPage />
 {/if}
 
 </main>

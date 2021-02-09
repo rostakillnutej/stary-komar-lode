@@ -47,5 +47,6 @@
   background-color: rgba(0,110,125,0.3);
   border-right: solid 5px #0094A8;
   text-align: left;
+  min-width: 140px;
 }
 </style>

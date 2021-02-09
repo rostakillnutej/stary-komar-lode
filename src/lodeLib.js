@@ -67,6 +67,7 @@ export function placeShip(grid,ship,posX,posY,id = 'h'){
       }
     }
   }
+
   //Pokládá loď do gridu na stránce
   for(let i=0; i<ship.height; i++){
     for(let j=0; j<ship.width; j++){

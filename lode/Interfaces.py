@@ -6,13 +6,17 @@ from lode.models.InstanceManager import InstanceManager
 
 from lode.db.userModel import User
 
+
+
+
+
 #Statický obsah
-'''
+
 @app.route('/', methods=['GET'])
 def index():
-    #return app.send_static_file('index.html')
+    return app.send_static_file('index.html')
     pass
-'''
+
 
 #Funkce na vybŕaní uživatele z databáze
 def isUser(request):
@@ -91,8 +95,10 @@ def remove(id):
 
 #Ukončení plánovací instance
 @socketio.on('finish', namespace='/plan')
-def fnish():
+def fnish(dif):
+
     ins = imp.getIns(request.sid)
+
     if not(ins):
         return
     #Kontrola položení všech lodí
@@ -106,6 +112,7 @@ def fnish():
         return
     #Přidání naplánované tabulky do db
     data.currentTable = ins.table.getSaveData()
+    data.dif = dif
     DB.session.commit()
     imp.delete(request.sid)
     emit('finishStatus',True, namespace='/plan')
@@ -118,7 +125,13 @@ img = InstanceManager('game')
 #Všechny cesty které manipulují s hracímí instancemi
 @socketio.on('connect', namespace='/game')
 def conGame():
+
+
     data = isUser(request)
+
+
+    # Z totoho vybrat obtížnost
+
     if not(data) or data.currentTable == '':
         emit('userError',False, namespace='/game')
         return
@@ -158,11 +171,7 @@ def hitEvent(pos):
         val = ins.changed[1]
         emit('myTableUpdate','{}#{}#{}'.format(x,y,val), namespace='/game')
 
-    print(result)
-    print(ins.winner)
-
     if ins.winner:
-        print('teď my měla hra zkončit')
         emit('endGame', ins.winner, namespace='/game')
 
 
