@@ -5,7 +5,12 @@
 
 <main>
 	<div class="logo"></div>
-	<button class="lode-btn" on:click={() => dispatch('start')}>HRÁT</button>
+
+	<button class="lode-btn" on:click={() => dispatch('start')}>PLÁNOVAT</button>
+
+	<div class="desc">
+		Pravidla jsou jednoduchá, po zmáčknutí tlačítky plánovat se teleportujete ne stránku s rozložením lodí do pole. Lodě si následně rozložíte do tabulky tak, aby nebyly vedle sebe. Následně si zvolíte obtížnost protivníka a kliknete na Hrát. Cílem hry je zničit všechny protivníkovy loě. Dosáhnete toho tak že, se navzájem přestřelujete dokud jeden z vás nevyhraje.
+	</div>
 </main>
 
 <style>
@@ -14,7 +19,7 @@
 		max-width: 600px;
 		margin: 5% auto;
 	}
-	div {
+	.logo {
 		height: 200px;
 		width: 100%;
 		background: var(--backdrop);
@@ -41,4 +46,10 @@
 	button:hover {
 		 background-color: var(--blue1);
 	}
+
+	.desc {
+		color: white;
+	}
+
+
 </style>

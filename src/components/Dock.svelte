@@ -2,15 +2,11 @@
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   import ShipElem from './ShipElem.svelte'
-  import Ship from '../objects/Ship.js'
-  import { dock,shipSelected } from '../stores/planning.js';
+  import { table,dock,shipSelected,isHover,hoverPos } from '../stores/planning.js';
+  import * as lode from '../lodeLib.js'
 
   function selectShip(e){
     shipSelected.update(_ => $dock[e.detail.index])
-    const newDock = [...$dock];
-    const index = newDock.indexOf($shipSelected)
-    newDock.splice(index,1)
-    dock.update(_ => newDock);
     //Vytvoření tabulky která se pohybuje s myší
     const cln = e.detail.e.target.cloneNode(true);
     cln.setAttribute('id', 'sticked');
@@ -22,9 +18,21 @@
     },false);
   }
 
+  function deselectShip(e){
+    //Maže loď ze schránky, kurzoru a její nastínění
+    if(!$shipSelected) return;
+    document.querySelector('#sticked').remove()
+    const newTable = lode.removeShip($table,$shipSelected,$hoverPos[0],$hoverPos[1],'h')
+    if(newTable){
+      table.update(_ => newTable)
+      isHover.update(_ => false)
+    }
+    shipSelected.update(_ => false)
+  }
+
 </script>
 
-<button class="ship-storage" on:click={e => dispatch('deselect',e)}>
+<button class="ship-storage" on:click={e => deselectShip(e)}>
   {#each $dock as item, i}
     <ShipElem index={i} props={item} on:select={selectShip}/>
 	{/each}
@@ -39,5 +47,6 @@
   background-color: rgba(0,110,125,0.3);
   border-right: solid 5px #0094A8;
   text-align: left;
+  min-width: 140px;
 }
 </style>

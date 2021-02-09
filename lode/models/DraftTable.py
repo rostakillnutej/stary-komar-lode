@@ -18,23 +18,29 @@ class DraftTable:
     def newId(self):
         keys = [*self.ships]
         #Kontroluje klíče po vymazaných lodích
+
         i = 1
         for key in keys:
-            if(key != i):
+
+            if( key != i and not(i in keys) ):
                 return i
             i += 1
         return i
 
     #Pokládá loď
     def placeShip(self,ship,posX,posY,id=0):
-        if(not(id)):
-            id = self.newId()
-        #Kontroluje jestli je místo na loď
+        #Kotnrola místa na loď
+        if(posX + ship.width) > self.size or (posY + ship.height) > self.size:
+            return False
+        #Kontroluje jestli by loď nezasahovala do jiné lodi
         for y in range(ship.height):
             for x in range(ship.width):
                 if(ship.grid[y][x]):
                     if(self.grid[posY + y][posX + x]):
                         return False
+
+        if(not(id)):
+            id = self.newId()
         #Pokládá loď
         for y in range(ship.height):
             for x in range(ship.width):
@@ -58,9 +64,8 @@ class DraftTable:
         #Maže pozici lodě a loď samotnou
         del self.locs[id]
         deletedShip = self.ships[id]
-        self.ships[id]
-        #Vrací vymazanou loď
-        return deletedShip
+        del self.ships[id]
+        return [deletedShip,posX,posY]
 
     #Převrací pole
     def rotate(self):
@@ -96,7 +101,6 @@ class DraftTable:
             shipObj.parseSaveData(shipsData[i])
             #Pokládá lodě podle pozic do mřížky
             self.placeShip(shipObj,locs[i][0],locs[i][1])
-
 
 
     #TESTOVACÍ

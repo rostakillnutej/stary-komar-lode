@@ -1,7 +1,6 @@
 from flask import jsonify
 from flask_socketio import send, emit
 import uuid
-from lode import usersUids
 
 def establish():
     token = str(uuid.uuid4())

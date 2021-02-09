@@ -1,5 +1,5 @@
 <script>
-  import { shipSelected,dock } from '../stores/planning.js';
+  import { socket,shipSelected,dock } from '../stores/planning.js';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
 	export let props;
@@ -12,9 +12,7 @@
   }
 
   function handleRotate(){
-    let newDock = [...$dock];
-    newDock[index].rotate();
-    dock.update(_ => newDock);
+    $socket.emit('rotateShip',index);
   }
 
 </script>

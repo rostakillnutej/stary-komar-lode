@@ -1,63 +1,55 @@
 <script>
-  import ShipsTable from './objects/ShipsTable.js'
 	import Dock from './components/Dock.svelte'
 	import DraftTable from './components/DraftTable.svelte'
-  import { dock,shipSelected } from './stores/planning.js';
-  import { baseAddr,baseAddrIo } from './stores/global.js';
+  import { socket,table,tableSize,dock,shipSelected } from './stores/planning.js';
+  import { baseAddr,state } from './stores/global.js';
   import axios from 'axios'
   import { onMount } from 'svelte';
+  import io from 'socket.io-client';
+  import * as lode from './lodeLib.js';
 
-  import io from "socket.io-client";
 
+	let dif = 2
 
+	function setDif(e) {
+		 dif = e.target.value;
+	}
 
-  let socket = io('http://localhost:8000/plan')
+	//Připojuje se na server
+  socket.update(_ => io($baseAddr + '/plan'))
 
-  socket.on('connect', data => {
-    console.log('Připojene na instanci');
+	//Event který se zavolá když je připojeno
+  $socket.on('connect', data => {
+
+  });
+	//Event na získání lodí
+  $socket.emit('getShips');
+	//Event který čeká na vrácení lodí
+  $socket.on('returnShips', data => {
+    let strs = JSON.parse(data);
+    let ships = strs.map(str => {
+      return lode.parseShipSaveData(str)
+    })
+    dock.update(_ => ships)
+  });
+	//Event na celé tabulky
+  $socket.emit('getDraftTable');
+	//Event který čeká na vrácení celé tabulky
+  $socket.on('returnDraftTable', data => {
+    table.update(_ => lode.parseDraftTableSaveData(data))
+    tableSize.update(_ => $table.length)
   });
 
-/*
-  //Example připojení na sockety
-    onMount(_ => {
-      const socket = io($baseAddr)
-      socket.on('connect', data => {
-        //console.log('joooj');
-      });
-    });
-*/
+	$socket.on('finishStatus', data => {
+		if(data){
+			$socket.disconnect(true)
+			state.update(_ => 'game');
+		}
+  });
 
-
-
-  let st = new ShipsTable(10);
-  let grid = st.grid
-
-  function deselectShip(e){
-    if(!$shipSelected) return;
-    document.querySelector('#sticked').remove()
-    const newDock = [...$dock,$shipSelected];
-    dock.update(_ => newDock);
-    shipSelected.update(_ => false)
-    if(st.locs.h){
-      st.removeShip('h')
-    }
-    grid = st.grid
-  }
-
-  function handleStart(){
-    axios({
-      method: 'post',
-      url: $baseAddr + '/game/new',
-      data: {
-        grid: st.getSaveData()
-      }
-    })
-    .then(res => {
-      console.log(res)
-    })
-    .catch(res => {
-      console.log(res)
-    });
+  function handleFinish(e){
+		e.preventDefault();
+    $socket.emit('finish',dif)
   }
 
 
@@ -65,12 +57,36 @@
 
 <main>
 	<div class="ship-storage">
-    <Dock on:deselect={deselectShip}/>
+    <Dock/>
   </div>
   <div class="game-table">
-	<DraftTable st={st} grid={grid} on:update={_ => grid = st.grid}/>
+	<DraftTable />
   </div>
-  <button class="game-button" on:click={handleStart}>HOTOVO</button>
+
+
+
+	<form on:submit={handleFinish}>
+		<div>
+
+			<input type="radio" on:change={setDif} id="r1" name="dif" class="dif-input" value="1">
+			<label for="r1" class="dif-label">Lehká</label>
+
+			<input type="radio" on:change={setDif} id="r2" name="dif" class="dif-input" value="2" checked>
+			<label for="r2" class="dif-label">Střední</label>
+
+			<input type="radio" on:change={setDif} id="r3" name="dif" class="dif-input" value="3">
+			<label for="r3" class="dif-label">Těžká</label>
+
+		</div>
+
+		<button type="submit"
+			class="game-button"
+			>HOTOVO</button>
+
+			<p>Pro pokračování je potřeba položit všechny lodě</p>
+
+	</form>
+
 </main>
 
 <style>
@@ -78,15 +94,52 @@
   margin: 20px;
   float: left;
 }
+
+form {
+	float: left;
+	margin-top: 25px;
+	height: 400px;
+	width: 200px;
+}
+
+p {
+	color: white;
+	text-align: center;
+}
+
+.dif-input {
+	display: none;
+}
+
+.dif-label {
+	display: block;
+	height: 40px;
+	width: 120px;
+	line-height: 40px;
+	text-align: center;
+	background: rgba(0,0,0,0.3);
+	margin: 5px auto;
+	color: white;
+}
+
+.dif-input:checked + .dif-label {
+	border: solid 2px var(--blue1);
+	background: rgba(0,0,0,0.5);
+}
+
+.dif-label:hover {
+	background-color: rgba(0,0,0,0.6);
+}
+
 .game-button {
+	margin: 25px auto;
   padding: 12px;
   font-size: 1.2em;
-  background-color: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.3);
   color: white;
 }
 
 .game-button:hover {
   background-color: rgba(0,0,0,0.6)
 }
-
 </style>
